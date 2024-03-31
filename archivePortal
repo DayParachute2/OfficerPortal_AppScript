@@ -1,0 +1,38 @@
+var officerPortal = SpreadsheetApp.openById("1gW2ia2udhnlK48jZ65oD-Ufuu-YFyQMrbFwqHpZ4d0Q");
+
+function archiveList(){
+  var portalSheets = officerPortal.getSheets();
+  var portalSheetsNum = officerPortal.getNumSheets();
+
+  var portalSheetArray = [];
+  for (var i = 0; i < portalSheetsNum; i++) {
+    portalSheetArray.push([portalSheets[i].getName()])
+  }
+
+  var storageArray = [];
+  for (var i = 0; i < portalSheetsNum; i++) {
+    var tempVar = portalSheetArray[i]; tempVar = tempVar.toString();
+    if(tempVar.toString().includes("11/") || tempVar.includes("12/") || tempVar.includes("1/") || tempVar.includes("2/")){
+      storageArray.push(portalSheetArray[i]);
+    }
+  }
+  
+  return storageArray;
+}
+
+function archiveID(){
+  Logger.log(archiveList());
+//Adding the old shift log into storage
+//var dest = SpreadsheetApp.openById(aID);
+ var dest = SpreadsheetApp.openById("1XW3hMBYiRPTe902VVWKOc2M051pXVfQPZ6caNenk9w0");
+  for (var i = 0; i<archiveList().length; i++){
+    var sheetActive = officerPortal.getSheetByName(archiveList()[i]);
+    var CopiedLog = sheetActive.copyTo(dest);
+    CopiedLog.setName(archiveList()[i].toString());
+    dest.setActiveSheet(dest.getSheetByName(archiveList()[i].toString()));
+    dest.moveActiveSheet(1);
+    var num = i+1;
+    Logger.log("Archiving sheet: "+archiveList()[i].toString()+ " Sheet Number: "+ num +"/"+archiveList().length);
+  }
+ Logger.log(ShiftLogName);
+}
